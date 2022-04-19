@@ -36,14 +36,7 @@ public class SatelliteMessageEntity implements Serializable{
 		this.message = message;
 	}
 
-
-
-	public SatelliteMessageEntity(String name, float distance, String message) {
-		super();
-		this.name = name;
-		this.distance=distance;
-		this.message = message;
-	}
+	
 	public int getId() {
 		return id;
 	}
