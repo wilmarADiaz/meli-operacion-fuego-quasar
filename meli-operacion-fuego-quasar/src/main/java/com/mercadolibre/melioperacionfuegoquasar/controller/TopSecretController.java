@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.mercadolibre.melioperacionfuegoquasar.entities.Payload;
 import com.mercadolibre.melioperacionfuegoquasar.entities.Response;
+import com.mercadolibre.melioperacionfuegoquasar.exceptions.MessageNotValidException;
+import com.mercadolibre.melioperacionfuegoquasar.exceptions.PositionException;
 import com.mercadolibre.melioperacionfuegoquasar.service.OperationQuasarFire;
 
 @RestController
@@ -22,8 +24,16 @@ public class TopSecretController {
 	
 	@PostMapping(value = "${meli.path.topsecret}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getPositionMessage(@RequestBody Payload payload) {
-		Response response = operation.getPositionDistressCallFromShip(payload);
-		return ResponseEntity.ok().body(gson.toJson(response));
+		Response response = null;
+		try {
+			response = operation.getPositionDistressCallFromShip(payload);
+			return ResponseEntity.ok().body(gson.toJson(response));
+		} catch (MessageNotValidException e) {
+			return ResponseEntity.status(404).body(e.getMessage());
+		} catch (PositionException e) {
+			return ResponseEntity.status(404).body(e.getMessage());
+		}
+		
 	}
 	
 	

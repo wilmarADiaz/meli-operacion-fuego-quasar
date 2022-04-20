@@ -3,15 +3,19 @@ package com.mercadolibre.melioperacionfuegoquasar.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mercadolibre.melioperacionfuegoquasar.entities.Payload;
 import com.mercadolibre.melioperacionfuegoquasar.entities.Position;
 import com.mercadolibre.melioperacionfuegoquasar.entities.Response;
 import com.mercadolibre.melioperacionfuegoquasar.entities.Satellite;
+import com.mercadolibre.melioperacionfuegoquasar.exceptions.MessageNotValidException;
+import com.mercadolibre.melioperacionfuegoquasar.exceptions.PositionException;
 import com.mercadolibre.melioperacionfuegoquasar.persistence.entity.SatelliteMessageEntity;
 import com.mercadolibre.melioperacionfuegoquasar.persistence.entity.SatellitePositionEntity;
 import com.mercadolibre.melioperacionfuegoquasar.persistence.repository.SatelliteMessageRepository;
@@ -26,9 +30,15 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 	@Resource
 	private SatellitePositionRepository positionRepository;
 	
+	@Autowired
+	private DecodeSatelliteMessage satelliteMessage;
+	
+	@Autowired
+	private CalculatePositionSatellite calculateObj;
+	
 	
 	@Override
-	public Response getPositionDistressCallFromShip(Payload payload) {
+	public Response getPositionDistressCallFromShip(Payload payload) throws MessageNotValidException, PositionException {
 		
 		List<SatellitePositionEntity> listEntity = positionRepository.findAll();
 		listEntity.sort(Comparator.comparing(SatellitePositionEntity::getName));
@@ -36,7 +46,7 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 		List<Satellite> list = payload.getSatellites();
 		list.sort(Comparator.comparing(Satellite::getName));
 		
-		CalculatePositionSatellite calculateObj = new CalculatePositionSatellite(
+		calculateObj.getPositionSatellite(
 				listEntity.get(0).getX(),listEntity.get(0).getY(),
 				listEntity.get(2).getX(), listEntity.get(2).getY(),
 				listEntity.get(1).getX(), listEntity.get(1).getY());
@@ -45,7 +55,7 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 					list.get(2).getDistance(),
 					list.get(1).getDistance());
 		
-		DecodeSatelliteMessage satelliteMessage = new DecodeSatelliteMessage();
+		
 		List<List<String>> listMessages = new ArrayList<List<String>>();
 		listMessages.add(payload.getSatellites().get(0).getMessage());
 		listMessages.add(payload.getSatellites().get(1).getMessage());
@@ -57,14 +67,14 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 	}
 
 	@Override
-	public Response getPositionDistressCallFromShip() {
+	public Response getPositionDistressCallFromShip() throws MessageNotValidException, PositionException {
 		List<SatellitePositionEntity> listEntity = positionRepository.findAll();
 		listEntity.sort(Comparator.comparing(SatellitePositionEntity::getName));
 		
 		List<SatelliteMessageEntity> list = messageRepository.findAll();
 		list.sort(Comparator.comparing(SatelliteMessageEntity::getName));
 		
-		CalculatePositionSatellite calculateObj = new CalculatePositionSatellite(
+		calculateObj.getPositionSatellite(
 				listEntity.get(0).getX(),listEntity.get(0).getY(),
 				listEntity.get(2).getX(), listEntity.get(2).getY(),
 				listEntity.get(1).getX(), listEntity.get(1).getY());
@@ -95,10 +105,10 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 		}else {
 			entity = messageRepository.save(new SatelliteMessageEntity(0,satellite.getName(), satellite.getDistance(), Commons.listToString(satellite.getMessage())));
 		}
-		if(entity != null && entity.getId() !=0) {
-			return true;
-		}else {
+		if(Objects.isNull(entity)) {
 			return false;
+		}else {
+			return true;
 		}
 			
 		

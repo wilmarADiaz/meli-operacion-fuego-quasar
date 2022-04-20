@@ -3,8 +3,17 @@ package com.mercadolibre.melioperacionfuegoquasar.service;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.mercadolibre.melioperacionfuegoquasar.exceptions.MessageNotValidException;
+
+@Component
 public class DecodeSatelliteMessage {
-	public String getMessage(List<List<String>> messages) {
+	@Value("${meli.message.exception}")
+	private String exceptionMessage;
+	
+	public String getMessage(List<List<String>> messages) throws MessageNotValidException {
 		String [] listFinal=null;
 		int sizeArray =0;
 		if(messages.get(0).size() <= messages.get(1).size() && messages.get(0).size() <= messages.get(2).size()) {
@@ -26,7 +35,7 @@ public class DecodeSatelliteMessage {
 		}
 		
 		if(!vaidateMessage(listFinal)) {
-			System.out.println("No es valido");
+			throw new MessageNotValidException(exceptionMessage);
 		}
 		return String.join(" ", listFinal);
 	}
