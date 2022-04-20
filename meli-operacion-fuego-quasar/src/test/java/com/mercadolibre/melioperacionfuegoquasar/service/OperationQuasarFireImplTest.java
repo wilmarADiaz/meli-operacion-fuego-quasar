@@ -90,14 +90,7 @@ class OperationQuasarFireImplTest {
 				+ "    ]\n"
 				+ "}";
 		payload = gson.fromJson(jsonPayload, Payload.class);
-		/*
-		String jsonResponse = "{\n"
-				+ "\"position\": {\n"
-				+ "\"x\": -100.0,\n"
-				+ "\"y\": 75.5\n"
-				+ "},\n"
-				+ "\"message\": \"este es un mensaje secreto\"\n"
-				+ "}";*/
+		
 		String jsonResponse = "{\n"
 				+ "\"position\": {\n"
 				+ "\"x\": -487.29,\n"

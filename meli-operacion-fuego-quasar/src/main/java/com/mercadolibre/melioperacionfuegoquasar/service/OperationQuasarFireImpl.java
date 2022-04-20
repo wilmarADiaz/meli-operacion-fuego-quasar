@@ -32,7 +32,6 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 	
 	@Autowired
 	private DecodeSatelliteMessage satelliteMessage;
-	
 	@Autowired
 	private CalculatePositionSatellite calculateObj;
 	
@@ -45,7 +44,7 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 		
 		List<Satellite> list = payload.getSatellites();
 		list.sort(Comparator.comparing(Satellite::getName));
-		
+		calculateObj = new CalculatePositionSatellite();
 		calculateObj.getPositionSatellite(
 				listEntity.get(0).getX(),listEntity.get(0).getY(),
 				listEntity.get(2).getX(), listEntity.get(2).getY(),
@@ -55,7 +54,7 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 					list.get(2).getDistance(),
 					list.get(1).getDistance());
 		
-		
+		satelliteMessage = new DecodeSatelliteMessage();
 		List<List<String>> listMessages = new ArrayList<List<String>>();
 		listMessages.add(payload.getSatellites().get(0).getMessage());
 		listMessages.add(payload.getSatellites().get(1).getMessage());
@@ -73,7 +72,7 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 		
 		List<SatelliteMessageEntity> list = messageRepository.findAll();
 		list.sort(Comparator.comparing(SatelliteMessageEntity::getName));
-		
+		calculateObj = new CalculatePositionSatellite();
 		calculateObj.getPositionSatellite(
 				listEntity.get(0).getX(),listEntity.get(0).getY(),
 				listEntity.get(2).getX(), listEntity.get(2).getY(),
