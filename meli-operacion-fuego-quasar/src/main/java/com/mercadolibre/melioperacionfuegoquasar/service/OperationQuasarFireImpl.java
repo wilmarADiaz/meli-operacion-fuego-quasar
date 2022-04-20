@@ -1,7 +1,6 @@
 package com.mercadolibre.melioperacionfuegoquasar.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -17,6 +16,7 @@ import com.mercadolibre.melioperacionfuegoquasar.persistence.entity.SatelliteMes
 import com.mercadolibre.melioperacionfuegoquasar.persistence.entity.SatellitePositionEntity;
 import com.mercadolibre.melioperacionfuegoquasar.persistence.repository.SatelliteMessageRepository;
 import com.mercadolibre.melioperacionfuegoquasar.persistence.repository.SatellitePositionRepository;
+import com.mercadolibre.melioperacionfuegoquasar.utils.Commons;
 
 @Service
 public class OperationQuasarFireImpl implements OperationQuasarFire{
@@ -44,7 +44,16 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 					list.get(0).getDistance(), 
 					list.get(2).getDistance(),
 					list.get(1).getDistance());
-		return new Response(position,"");
+		
+		DecodeSatelliteMessage satelliteMessage = new DecodeSatelliteMessage();
+		List<List<String>> listMessages = new ArrayList<List<String>>();
+		listMessages.add(payload.getSatellites().get(0).getMessage());
+		listMessages.add(payload.getSatellites().get(1).getMessage());
+		listMessages.add(payload.getSatellites().get(2).getMessage());
+		
+		String messageFinal = satelliteMessage.getMessage(listMessages);
+		
+		return new Response(position, messageFinal);
 	}
 
 	@Override
@@ -64,7 +73,16 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 					list.get(2).getDistance(),
 					list.get(1).getDistance());
 		
-		return new Response(position,"");
+		
+		DecodeSatelliteMessage satelliteMessage = new DecodeSatelliteMessage();
+		List<List<String>> listMessages = new ArrayList<List<String>>();
+		listMessages.add(Commons.stringToList(list.get(0).getMessage()));
+		listMessages.add(Commons.stringToList(list.get(1).getMessage()));
+		listMessages.add(Commons.stringToList(list.get(2).getMessage()));
+		
+		String messageFinal = satelliteMessage.getMessage(listMessages);
+		
+		return new Response(position, messageFinal);
 	}
 
 	@Override
@@ -72,10 +90,10 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 		SatelliteMessageEntity entity= messageRepository.findByName(satellite.getName());
 		if(entity !=null && entity.getId() !=0) {
 			entity.setDistance(satellite.getDistance());
-			entity.setMessage(ListToString(satellite.getMessage()));
+			entity.setMessage(Commons.listToString(satellite.getMessage()));
 			entity = messageRepository.save(entity);
 		}else {
-			entity = messageRepository.save(new SatelliteMessageEntity(0,satellite.getName(), satellite.getDistance(), ListToString(satellite.getMessage())));
+			entity = messageRepository.save(new SatelliteMessageEntity(0,satellite.getName(), satellite.getDistance(), Commons.listToString(satellite.getMessage())));
 		}
 		if(entity != null && entity.getId() !=0) {
 			return true;
@@ -86,15 +104,6 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 		
 		
 	}
-	
-	public String ListToString(List<String> list) {
-		return  String.join(",", list);
-	}
-	
-	public List<String> StringToList(String str){
-		return new ArrayList<String>(Arrays.asList(str.split(",")));
-	}
-
 	
 		
 

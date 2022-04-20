@@ -32,6 +32,7 @@ class OperationQuasarFireImplTest {
 	private Payload payload;
 	private Response response;
 	private List<SatellitePositionEntity> listPosition;
+	private List<SatelliteMessageEntity> listMessage;
 	
 	@Mock
 	SatelliteMessageRepository repositoryMessage;
@@ -100,7 +101,7 @@ class OperationQuasarFireImplTest {
 				+ "\"x\": -487.29,\n"
 				+ "\"y\": 1557.01\n"
 				+ "},\n"
-				+ "\"message\": \"\"\n"
+				+ "\"message\": \"este es un mensaje secreto\"\n"
 				+ "}";
 		response = gson.fromJson(jsonResponse, Response.class);
 		
@@ -108,6 +109,12 @@ class OperationQuasarFireImplTest {
 		listPosition.add(new SatellitePositionEntity(1,"kenobi",-500,-200));
 		listPosition.add(new SatellitePositionEntity(2,"skywalker",100, -100));
 		listPosition.add(new SatellitePositionEntity(3,"sato",500, 100));
+		
+		listMessage = new ArrayList<SatelliteMessageEntity>();
+		listMessage.add(new SatelliteMessageEntity(1, "kenobi", (float)100.0, "este,,,mensaje,"));
+		listMessage.add(new SatelliteMessageEntity(2, "skywalker", (float) 115.5, ",es,,,secreto"));
+		listMessage.add(new SatelliteMessageEntity(3, "sato", (float) 142.7, "este,,un,,"));
+		
 	}
 	
 	@Test
@@ -125,8 +132,18 @@ class OperationQuasarFireImplTest {
 		assertEquals(response.getPosition().getX(), service.getPositionDistressCallFromShip(payload).getPosition().getX());
 		assertEquals(response.getPosition().getY(), service.getPositionDistressCallFromShip(payload).getPosition().getY());
 		assertEquals(response.getMessage(), service.getPositionDistressCallFromShip(payload).getMessage());
-		
-		
+	
+	}
+	
+	@Test
+	void getPositionDistressCallFromShipBDTest() {
+		setUp();
+		Mockito.when(repositoryMessage.findAll()).thenReturn(listMessage);
+		Mockito.when(repositoryPosition.findAll()).thenReturn(listPosition);
+		assertEquals(response.getPosition().getX(), service.getPositionDistressCallFromShip().getPosition().getX());
+		assertEquals(response.getPosition().getY(), service.getPositionDistressCallFromShip().getPosition().getY());
+		assertEquals(response.getMessage(), service.getPositionDistressCallFromShip().getMessage());
+	
 	}
 
 }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.mercadolibre.melioperacionfuegoquasar.entities.Response;
 import com.mercadolibre.melioperacionfuegoquasar.entities.Satellite;
 import com.mercadolibre.melioperacionfuegoquasar.entities.SatelliteTopSecretSplit;
 import com.mercadolibre.melioperacionfuegoquasar.service.OperationQuasarFire;
@@ -17,6 +19,9 @@ import com.mercadolibre.melioperacionfuegoquasar.service.OperationQuasarFire;
 public class TopSecretSplitController {
 	@Autowired
 	private OperationQuasarFire operation;
+	
+	@Autowired
+	private Gson gson;
 	
 	@PostMapping(value = "${meli.path.topsecret.split}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getPositionMessagge(@RequestParam("satellite_name") String satelliteName, @RequestBody SatelliteTopSecretSplit request) {
@@ -30,7 +35,8 @@ public class TopSecretSplitController {
 	
 	@GetMapping(value = "${meli.path.topsecret.split}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getLocationController() {
-		return ResponseEntity.ok().body("");
+		Response response = operation.getPositionDistressCallFromShip();
+		return ResponseEntity.ok().body(gson.toJson(response));
 		
 	}
 }
