@@ -1,6 +1,7 @@
 package com.mercadolibre.melioperacionfuegoquasar.service;
 
 import java.math.BigDecimal;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class CalculatePositionSatellite {
 	 * @throws PositionException
 	 */
 	public Position getLocation(final Float ...distances) throws PositionException {
-		
+		log.log(Level.INFO, "init-getLocation");
 		Position position = null;
 		if (distances.length>2) {
 			double a = -2 * kenobiX + 2 * skywalkerX;
@@ -64,10 +65,12 @@ public class CalculatePositionSatellite {
 	            float y = BigDecimal.valueOf(dy / d).setScale(2, java.math.RoundingMode.HALF_UP).floatValue();
 	            position = new Position(x, y);
 			}else{
-				throw new PositionException("");
+				log.log(Level.SEVERE, exceptionMessage);
+				throw new PositionException(exceptionMessage);
 			}
 		}else{
-			throw new PositionException("");
+			log.log(Level.SEVERE, exceptionMessage);
+			throw new PositionException(exceptionMessage);
 		}
 		return position;
 	

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
@@ -24,6 +26,8 @@ import com.mercadolibre.melioperacionfuegoquasar.utils.Commons;
 
 @Service
 public class OperationQuasarFireImpl implements OperationQuasarFire{
+	private final static Logger log = Logger.getLogger(OperationQuasarFireImpl.class.getName());
+	
 	@Resource
 	private SatelliteMessageRepository messageRepository;
 	
@@ -38,7 +42,7 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 	
 	@Override
 	public Response getPositionDistressCallFromShip(Payload payload) throws MessageNotValidException, PositionException {
-		
+		log.log(Level.INFO, "init-getPositionDistressCallFromShip (payload)");		
 		List<SatellitePositionEntity> listEntity = positionRepository.findAll();
 		listEntity.sort(Comparator.comparing(SatellitePositionEntity::getName));
 		
@@ -67,6 +71,7 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 
 	@Override
 	public Response getPositionDistressCallFromShip() throws MessageNotValidException, PositionException {
+		log.log(Level.INFO, "init-getPositionDistressCallFromShip");
 		List<SatellitePositionEntity> listEntity = positionRepository.findAll();
 		listEntity.sort(Comparator.comparing(SatellitePositionEntity::getName));
 		
@@ -96,6 +101,7 @@ public class OperationQuasarFireImpl implements OperationQuasarFire{
 
 	@Override
 	public boolean saveDistressCallFromShip(Satellite satellite) {
+		log.log(Level.INFO, "init-saveDistressCallFromShip");
 		SatelliteMessageEntity entity= messageRepository.findByName(satellite.getName());
 		if(entity !=null && entity.getId() !=0) {
 			entity.setDistance(satellite.getDistance());

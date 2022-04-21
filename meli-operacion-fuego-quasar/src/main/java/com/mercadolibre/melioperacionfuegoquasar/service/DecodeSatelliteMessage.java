@@ -2,6 +2,8 @@ package com.mercadolibre.melioperacionfuegoquasar.service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,8 @@ import com.mercadolibre.melioperacionfuegoquasar.exceptions.MessageNotValidExcep
 
 @Component
 public class DecodeSatelliteMessage {
+	private final static Logger log = Logger.getLogger(DecodeSatelliteMessage.class.getName());
+	
 	@Value("${meli.message.exception}")
 	private String exceptionMessage;
 	
@@ -23,6 +27,7 @@ public class DecodeSatelliteMessage {
 	 * @throws MessageNotValidException
 	 */
 	public String getMessage(List<List<String>> messages) throws MessageNotValidException {
+		log.log(Level.INFO, "init-getMessage");
 		String [] listFinal=null;
 		int sizeArray =0;
 		if(messages.get(0).size() <= messages.get(1).size() && messages.get(0).size() <= messages.get(2).size()) {
@@ -44,6 +49,7 @@ public class DecodeSatelliteMessage {
 		}
 		
 		if(!vaidateMessage(listFinal)) {
+			log.log(Level.SEVERE, exceptionMessage);
 			throw new MessageNotValidException(exceptionMessage);
 		}
 		return String.join(" ", listFinal);
@@ -55,6 +61,7 @@ public class DecodeSatelliteMessage {
 	 * @return boolean si es valido o no el mensaje
 	 */
 	public boolean vaidateMessage(String [] array) {
+		log.log(Level.INFO, "init-vaidateMessage");
 		Boolean isValid = null;
 		for (int i = 0; i < array.length && (Objects.isNull(isValid) || isValid) ; i++) {
 			if(!array[i].isEmpty()) {
