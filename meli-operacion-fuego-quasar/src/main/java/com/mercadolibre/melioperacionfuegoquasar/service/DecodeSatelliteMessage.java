@@ -13,6 +13,15 @@ public class DecodeSatelliteMessage {
 	@Value("${meli.message.exception}")
 	private String exceptionMessage;
 	
+	/**
+	 * Se determina primero el mensaje que tenga menos posiciones como referencia,  
+	 * debido a que el desfase es a la izquierda se empieza a completar el mensaje
+	 * de la ultima palabla hacia la primera 
+	 * 
+	 * @param messages
+	 * @return
+	 * @throws MessageNotValidException
+	 */
 	public String getMessage(List<List<String>> messages) throws MessageNotValidException {
 		String [] listFinal=null;
 		int sizeArray =0;
@@ -39,6 +48,12 @@ public class DecodeSatelliteMessage {
 		}
 		return String.join(" ", listFinal);
 	}
+	
+	/**
+	 * Valida si el mensaje fue completado o si por el contrario no se puede determinar
+	 * @param array mensaje final
+	 * @return boolean si es valido o no el mensaje
+	 */
 	public boolean vaidateMessage(String [] array) {
 		Boolean isValid = null;
 		for (int i = 0; i < array.length && (Objects.isNull(isValid) || isValid) ; i++) {

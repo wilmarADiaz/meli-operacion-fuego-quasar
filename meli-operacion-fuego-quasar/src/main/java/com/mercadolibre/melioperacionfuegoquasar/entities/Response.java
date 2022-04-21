@@ -1,6 +1,11 @@
 package com.mercadolibre.melioperacionfuegoquasar.entities;
 
-
+/**
+ * 
+ * @author wilmar
+ *	
+ * Clase que contiene la posicion y el mensaje de la nave que pide auxilio.
+ */
 public class Response {
 	private Position position;
 	private String message;

@@ -1,6 +1,10 @@
 package com.mercadolibre.melioperacionfuegoquasar.entities;
 
-
+/**
+ * 
+ * @author wilmar
+ * Clase que contiene la posicion de cada satelite.
+ */
 public class Position {
 	private float x;
 	private float y;

@@ -2,7 +2,12 @@ package com.mercadolibre.melioperacionfuegoquasar.entities;
 
 import java.util.List;
 
-
+/**
+ * 
+ * @author wilmar
+ * Informacion que ingresa por el controller de /topsecret 
+ * que contiene la informacion de los tres satelites 
+ */
 public class Payload {
 
 	private List<Satellite> satellites = null;

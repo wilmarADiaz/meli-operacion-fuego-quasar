@@ -2,7 +2,13 @@ package com.mercadolibre.melioperacionfuegoquasar.entities;
 
 import java.util.List;
 
-
+/**
+ * 
+ * @author wilmar
+ *	
+ * Clase que contiene la informacion de distancia y mensaje del satelite 
+ * como llega por /topsecret_split
+ */
 public class SatelliteTopSecretSplit {	
 	private float distance;
 	private List<String> message = null;

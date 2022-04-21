@@ -1,6 +1,7 @@
 package com.mercadolibre.melioperacionfuegoquasar.service;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,8 @@ import com.mercadolibre.melioperacionfuegoquasar.exceptions.PositionException;
 
 @Component
 public class CalculatePositionSatellite {
+	private final static Logger log = Logger.getLogger(CalculatePositionSatellite.class.getName());
+	
 	@Value("${meli.position.exception}")
 	private String exceptionMessage;
 	private float kenobiX;
@@ -31,8 +34,18 @@ public class CalculatePositionSatellite {
 		this.satoY = satoY;
 	}
 
-
+	/**
+	 * Se hizo el cálculo de la posición mediante el método matemético de trilateración, 
+	 * que deriva del cálculo de la triangulación matemática donde se toma la componente x o y 
+	 * como parte del triangulo rectangulo más la distancia (hipotenusa), aplicando luego 
+	 * la ecuación de pitágoras c²=a²+b² 
+	 * 
+	 * @param distances
+	 * @return Position donde se encuentra el emisor (la nave pidiendo ayuda)
+	 * @throws PositionException
+	 */
 	public Position getLocation(final Float ...distances) throws PositionException {
+		
 		Position position = null;
 		if (distances.length>2) {
 			double a = -2 * kenobiX + 2 * skywalkerX;

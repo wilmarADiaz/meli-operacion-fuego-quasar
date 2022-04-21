@@ -8,7 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 
-
+/**
+ * 
+ * @author wilmar
+ *
+ * Entity que contiene o va contener la informción de la tabla de mensaje, nombre y distancia
+ */
 @Entity
 @Table(name = "satellite_message", schema = "quasar_operation_db")
 public class SatelliteMessageEntity implements Serializable{

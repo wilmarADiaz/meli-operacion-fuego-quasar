@@ -7,6 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author wilmar
+ *
+ * Entity quye contiene o va contener la informacion de las posiciones de los satelites	
+ */
 @Entity
 @Table(name = "satellite_position", schema = "quasar_operation_db")
 public class SatellitePositionEntity implements Serializable{

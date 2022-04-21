@@ -2,7 +2,13 @@ package com.mercadolibre.melioperacionfuegoquasar.entities;
 
 import java.util.List;
 
-
+/**
+ * 
+ * @author wilmar
+ *	
+ * Clase que contiene la informacion de nombre, distancia y mensaje del satelite
+ * como llega del controller por /topsecret
+ */
 public class Satellite {
 
 	private String name;
